@@ -1,0 +1,84 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:PatientApp.Gui.ViewModels"
+        xmlns:conv="using:PatientApp.Gui.Converters"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+        x:Class="PatientApp.Gui.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="환자 관리">
+
+    <Window.Resources>
+        <conv:GenderToKoreanConverter x:Key="GenderToKorean"/>
+        <conv:DateOnlyToStringConverter x:Key="DateOnlyToString"/>
+    </Window.Resources>
+
+    <DockPanel Margin="12">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Spacing="8">
+            <TextBox Width="240" Watermark="이름 검색" Text="{Binding SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Content="검색" Command="{Binding SearchCommand}"/>
+            <Button Content="전체" Command="{Binding LoadAllCommand}"/>
+            <TextBlock Margin="12,0,0,0" VerticalAlignment="Center" Text="{Binding Patients.Count, StringFormat=총 {0}건}"/>
+        </StackPanel>
+
+        <Grid RowDefinitions="*,Auto" Margin="0,8,0,0">
+            <DataGrid Grid.Row="0" ItemsSource="{Binding Patients}" AutoGenerateColumns="False" x:CompileBindings="False" MinHeight="250">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="2*"/>
+                    <DataGridTextColumn Header="이름" Binding="{Binding Name}" Width="*"/>
+                    <DataGridTemplateColumn Header="생년월일" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding BirthDate, Converter={StaticResource DateOnlyToString}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="성별" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Gender, Converter={StaticResource GenderToKorean}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="연락처" Binding="{Binding Phone}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <StackPanel Grid.Row="1" Margin="0,12,0,0">
+                <TextBlock Text="새 환자 추가" FontWeight="Bold" Margin="0,0,0,8"/>
+                <Border Padding="12,8" BorderThickness="1" CornerRadius="6">
+                    <Grid ColumnDefinitions="Auto,*,Auto,*" RowDefinitions="Auto,Auto,Auto">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="이름" VerticalAlignment="Center"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding NewName, Mode=TwoWay}"/>
+
+                        <TextBlock Grid.Row="0" Grid.Column="2" Margin="12,0,0,0" Text="생년월일" VerticalAlignment="Center"/>
+                        <DatePicker Grid.Row="0" Grid.Column="3" SelectedDate="{Binding NewBirthDate, Mode=TwoWay}"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="성별" VerticalAlignment="Center"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding GenderOptions}" SelectedItem="{Binding NewGender, Mode=TwoWay}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource GenderToKorean}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <TextBlock Grid.Row="1" Grid.Column="2" Margin="12,0,0,0" Text="연락처" VerticalAlignment="Center"/>
+                        <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding NewPhone, Mode=TwoWay}"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="비고" VerticalAlignment="Center"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding NewNotes, Mode=TwoWay}"/>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Spacing="8" Margin="0,12,0,0">
+            <Button Content="추가" Command="{Binding AddCommand}"/>
+            <Button Content="입력 초기화" Command="{Binding ClearFormCommand}"/>
+        </StackPanel>
+    </DockPanel>
+
+</Window>

@@ -1,0 +1,15 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="PatientApp.Gui.App"
+             xmlns:local="using:PatientApp.Gui"
+             RequestedThemeVariant="Default">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <!-- ViewLocator 사용 안 함: DataContext를 코드에서 설정 -->
+    <Application.Styles>
+        <FluentTheme />
+        <Style Selector="DataGrid">
+            <Setter Property="IsReadOnly" Value="True"/>
+        </Style>
+    </Application.Styles>
+</Application>
