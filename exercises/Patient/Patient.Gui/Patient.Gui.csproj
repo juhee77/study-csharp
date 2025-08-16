@@ -28,6 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PatientApp.Core\PatientApp.Core.csproj" />
+    <ProjectReference Include="..\Patient.Core\Patient.Core.csproj" />
   </ItemGroup>
 </Project>
